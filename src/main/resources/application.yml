@@ -1,0 +1,10 @@
+server:
+  port: 6325
+
+spring:
+  elasticsearch:
+    jest:
+      uris:
+        - http://120.55.168.18:8828
+      read-timeout: 5000
+

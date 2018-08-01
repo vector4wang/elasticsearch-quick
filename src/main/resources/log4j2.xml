@@ -24,15 +24,6 @@
             <PatternLayout pattern="%d{yyyy.MM.dd 'at' HH:mm:ss z} %-5level %class{36} %M() @%L - %msg%n"/>
             <SizeBasedTriggeringPolicy size="5MB"/>
         </RollingFile>
-        <!--druid的日志记录追加器-->
-        <RollingFile name="druidSqlRollingFile" fileName="log/druid-sql.log"
-                     filePattern="logs/$${date:yyyy-MM}/api-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="500 MB"/>
-                <TimeBasedTriggeringPolicy/>
-            </Policies>
-        </RollingFile>
     </Appenders>
     <Loggers>
         <Root level="INFO">
@@ -41,13 +32,6 @@
             <appender-ref ref="RollingErrorFile"/>
             <appender-ref ref="Console"/>
         </Root>
-        <!--记录druid-sql的记录-->
-        <logger name="druid.sql.Statement" level="debug" additivity="false">
-            <appender-ref ref="druidSqlRollingFile"/>
-        </logger>
-        <logger name="druid.sql.Statement" level="debug" additivity="false">
-            <appender-ref ref="druidSqlRollingFile"/>
-        </logger>
 
         <!--log4j2 自带过滤日志-->
         <Logger name="org.apache.catalina.startup.DigesterFactory" level="error" />
