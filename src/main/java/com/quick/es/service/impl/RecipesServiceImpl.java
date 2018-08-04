@@ -1,5 +1,7 @@
 package com.quick.es.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.quick.es.entity.Recipes;
 import com.quick.es.service.RecipesService;
 import io.searchbox.client.JestClient;
@@ -9,6 +11,7 @@ import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.mapping.PutMapping;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author vector
@@ -155,14 +159,17 @@ public class RecipesServiceImpl implements RecipesService {
 	}
 
 	@Override
-	public void save(Recipes recipes) {
+	public boolean save(Recipes recipes) {
 		Index index = new Index.Builder(recipes).index(Recipes.INDEX_NAME).type(Recipes.TYPE).build();
 		try {
-			jestClient.execute(index);
+			DocumentResult execute = jestClient.execute(index);
 			LOGGER.info("ES 插入完成");
+			return execute.isSucceeded();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
+
 	}
 
 	@Override
@@ -183,9 +190,25 @@ public class RecipesServiceImpl implements RecipesService {
 	}
 
 	@Override
+	public boolean updateByDocId(Recipes recipes) {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("doc", recipes);
+		Update update = new Update.Builder(jsonObject.toJSONString()).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+				.id(recipes.getId() + "").build();
+		try {
+			JestResult result = jestClient.execute(update);
+			LOGGER.info(result.getJsonString());
+			return result.isSucceeded();
+		} catch (IOException e) {
+			LOGGER.error("updateByDocId fail. msg:{}", e.getMessage());
+		}
+		return false;
+	}
+
+	@Override
 	public List<Recipes> search(String content) {
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(QueryBuilders.matchQuery("name", content));
+		searchSourceBuilder.query(QueryBuilders.termQuery("name", content));
 		Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex(Recipes.INDEX_NAME)
 				.addType(Recipes.TYPE).build();
 		try {
@@ -197,4 +220,5 @@ public class RecipesServiceImpl implements RecipesService {
 		}
 		return null;
 	}
+
 }

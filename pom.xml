@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <es.version>5.4.0</es.version>
+        <swagger.version>2.7.0</swagger.version>
     </properties>
 
     <parent>
@@ -66,6 +66,16 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
     </dependencies>
 

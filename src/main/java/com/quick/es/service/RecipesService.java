@@ -35,7 +35,7 @@ public interface RecipesService {
 
 
 
-	void save(Recipes recipes);
+	boolean save(Recipes recipes);
 
 	/**
 	 * 根据文档ID删除文档
@@ -44,5 +44,8 @@ public interface RecipesService {
 	 */
 	boolean deleteByDocId(String id);
 
+	boolean updateByDocId(Recipes recipes);
+
 	List<Recipes> search(String content);
+
 }
