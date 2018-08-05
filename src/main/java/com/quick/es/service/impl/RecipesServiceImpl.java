@@ -64,6 +64,20 @@ public class RecipesServiceImpl implements RecipesService {
 	}
 
 	@Override
+	public void createAnalyzerIndexMapping() {
+		String source = "{\""+Recipes.TYPE+"\":{\"properties\":{\"id\":{\"type\":\"long\"},\"name4KeyWord\":{\"type\":\"keyword\"},\"name4Standard\":{\"type\":\"text\"},\"name4IK\":{\"type\":\"text\",\"analyzer\":\"ik_smart\",\"search_analyzer\":\"ik_smart\"},\"rating\":{\"type\":\"float\"},\"type\":{\"type\":\"keyword\"}}}}";
+		LOGGER.info("source:{}", source);
+		PutMapping putMapping = new PutMapping.Builder(Recipes.INDEX_NAME, Recipes.TYPE, source).build();
+		try {
+			JestResult jestResult = jestClient.execute(putMapping);
+			LOGGER.info("createIndexMapping resp: {}", jestResult.getJsonString());
+		} catch (IOException e) {
+			LOGGER.error("createIndexMapping fail. msg:{}", e.getMessage());
+		}
+	}
+
+
+	@Override
 	public void insert() {
 		Recipes recipes0 = new Recipes(0L, "剁椒鱼头", 3, "湘菜");
 		Recipes recipes1 = new Recipes(1L, "鲫鱼汤（辣）", 3.5f, "湘菜");

@@ -21,7 +21,7 @@ public class InitService implements CommandLineRunner {
 	@Override
 	public void run(String... strings) throws Exception {
 		recipesService.createIndex();
-		recipesService.createIndexMapping();
+		recipesService.createAnalyzerIndexMapping();
 		/**
 		 * 可自主选择单个插入还是批量插入
 		 */

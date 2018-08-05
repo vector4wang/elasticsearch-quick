@@ -9,20 +9,21 @@ import java.io.Serializable;
  */
 public class Recipes implements Serializable {
 
-	public static final String INDEX_NAME = "recipes";
+	public static final String INDEX_NAME = "recipes_analyzed";
 	public static final String TYPE = "item";
 
 	private Long id;
-	private String name;
+	private String name4KeyWord; // 不分词
+	private String name4Standard;// 默认的standard分词
+	private String name4IK;// 使用ik分词
 	private float rating;
 	private String type;
 
-	public Recipes() {
-	}
-
-	public Recipes(Long id, String name, float rating, String type) {
+	public Recipes(Long id, String name4Standard, float rating, String type) {
 		this.id = id;
-		this.name = name;
+		this.name4Standard = name4Standard;
+		this.name4IK = name4Standard;
+		this.name4KeyWord = name4Standard;
 		this.rating = rating;
 		this.type = type;
 	}
@@ -35,12 +36,28 @@ public class Recipes implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getName4KeyWord() {
+		return name4KeyWord;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName4KeyWord(String name4KeyWord) {
+		this.name4KeyWord = name4KeyWord;
+	}
+
+	public String getName4Standard() {
+		return name4Standard;
+	}
+
+	public void setName4Standard(String name4Standard) {
+		this.name4Standard = name4Standard;
+	}
+
+	public String getName4IK() {
+		return name4IK;
+	}
+
+	public void setName4IK(String name4IK) {
+		this.name4IK = name4IK;
 	}
 
 	public float getRating() {

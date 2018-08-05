@@ -24,6 +24,11 @@ public interface RecipesService {
 	void createIndexMapping();
 
 	/**
+	 * 部分字段使用IK进行分词索引
+	 */
+	void createAnalyzerIndexMapping();
+
+	/**
 	 * 插入测试数据
 	 */
 	void insert();
@@ -47,5 +52,6 @@ public interface RecipesService {
 	boolean updateByDocId(Recipes recipes);
 
 	List<Recipes> search(String content);
+
 
 }

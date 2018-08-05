@@ -16,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/recipes")
-@Api(description = "ElasticSearch 教科书般的Code", value = "RecipesController")
+@Api(description = "ElasticSearch 教科书般的Code", tags = "RecipesController")
 public class RecipesController {
 
 	@Resource
