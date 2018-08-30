@@ -144,3 +144,6 @@ ik分词有两种模式
 
 [点我](http://www.cnblogs.com/yjf512/p/4897294.html)看term和match的区别
 
+### 高亮查询
+
+[![高亮查询](https://i.loli.net/2018/08/30/5b880b776032f.png)](https://i.loli.net/2018/08/30/5b880b776032f.png)

@@ -5,17 +5,21 @@ import com.quick.es.service.RecipesAnalyzedService;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
 import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecipesAnalyzedServiceImpl implements RecipesAnalyzedService {
@@ -59,14 +63,40 @@ public class RecipesAnalyzedServiceImpl implements RecipesAnalyzedService {
 	@Override
 	public List<Recipes> booleanQuery(String keyword) {
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-				.must(QueryBuilders.termQuery("name4Standard",keyword))
+		QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("name4Standard", keyword))
 				.must(QueryBuilders.rangeQuery("rating").gte(3.5));
 		searchSourceBuilder.query(queryBuilder);
 		System.out.println(searchSourceBuilder.toString());
-		Search build = new Search.Builder(searchSourceBuilder.toString()).addIndex(Recipes.INDEX_NAME).addType(Recipes.TYPE)
-				.build();
+		Search build = new Search.Builder(searchSourceBuilder.toString()).addIndex(Recipes.INDEX_NAME)
+				.addType(Recipes.TYPE).build();
 		return generateResult(build);
+	}
+
+	@Override
+	public List<Recipes> highlightQuery(String keyword) throws IOException {
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("name4Standard", keyword));
+		searchSourceBuilder.query(queryBuilder);
+		HighlightBuilder highlightBuilder = new HighlightBuilder();
+		highlightBuilder.field("name4Standard");//高亮title
+		highlightBuilder.preTags("<em>").postTags("</em>");//高亮标签
+		highlightBuilder.fragmentSize(500);//高亮内容长度
+		searchSourceBuilder.highlight(highlightBuilder);
+		Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex(Recipes.INDEX_NAME).addType(Recipes.TYPE).build();
+		SearchResult result = jestClient.execute(search);
+		List<Recipes> recipes = new ArrayList<>();
+		List<SearchResult.Hit<Recipes, Void>> hits = result.getHits(Recipes.class);
+		for (SearchResult.Hit<Recipes, Void> hit : hits) {
+			Recipes source = hit.source;
+
+			Map<String, List<String>> highlight = hit.highlight;
+			List<String> name4IKView = highlight.get("name4Standard");
+			if (name4IKView != null) {
+				source.setName4IK(name4IKView.get(0));
+			}
+			recipes.add(source);
+		}
+		return recipes;
 	}
 
 	private List<Recipes> generateResult(Search search) {

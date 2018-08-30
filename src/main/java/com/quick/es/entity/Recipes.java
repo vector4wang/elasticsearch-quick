@@ -75,4 +75,10 @@ public class Recipes implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return "Recipes{" + "id=" + id + ", name4KeyWord='" + name4KeyWord + '\'' + ", name4Standard='" + name4Standard
+				+ '\'' + ", name4IK='" + name4IK + '\'' + ", rating=" + rating + ", type='" + type + '\'' + '}';
+	}
 }

@@ -141,7 +141,7 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public void bulkInsert() {
-		Recipes recipes0 = new Recipes(0L, "剁椒鱼头", 3, "湘菜");
+		Recipes recipes0 = new Recipes(0L, "剁椒鱼头剁椒鱼头剁椒鱼头剁椒鱼头", 3, "湘菜");
 		Recipes recipes1 = new Recipes(1L, "鲫鱼汤（辣）", 3.5f, "湘菜");
 		Recipes recipes2 = new Recipes(2L, "鲫鱼汤（变态辣）", 2, "湘菜");
 		Recipes recipes3 = new Recipes(3L, "鱼香肉丝", 4, "川菜");
