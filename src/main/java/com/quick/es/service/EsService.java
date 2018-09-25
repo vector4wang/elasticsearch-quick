@@ -1,6 +1,6 @@
 package com.quick.es.service;
 
-import com.quick.es.entity.Recipes;
+import com.quick.es.entity.BossJdInfo;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * Time: 14:06
  * Description:
  */
-public interface RecipesService {
+public interface EsService {
 
 	/**
 	 * 创建索引
@@ -22,11 +22,6 @@ public interface RecipesService {
 	 * 创建映射
 	 */
 	void createIndexMapping();
-
-	/**
-	 * 部分字段使用IK进行分词索引
-	 */
-	void createAnalyzerIndexMapping();
 
 	/**
 	 * 插入测试数据
@@ -40,7 +35,7 @@ public interface RecipesService {
 
 
 
-	boolean save(Recipes recipes);
+	boolean save(BossJdInfo bossJdInfo);
 
 	/**
 	 * 根据文档ID删除文档
@@ -49,9 +44,9 @@ public interface RecipesService {
 	 */
 	boolean deleteByDocId(String id);
 
-	boolean updateByDocId(Recipes recipes);
+	boolean updateByDocId(BossJdInfo bossJdInfo);
 
-	List<Recipes> search(String content);
+	List<BossJdInfo> search(String content);
 
 
 }

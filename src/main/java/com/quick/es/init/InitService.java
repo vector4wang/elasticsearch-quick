@@ -1,6 +1,6 @@
 package com.quick.es.init;
 
-import com.quick.es.service.RecipesService;
+import com.quick.es.service.EsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -16,16 +16,14 @@ import org.springframework.stereotype.Component;
 public class InitService implements CommandLineRunner {
 
 	@Autowired
-	private RecipesService recipesService;
+	private EsService recipesService;
 
 	@Override
 	public void run(String... strings) throws Exception {
 		recipesService.createIndex();
-		recipesService.createAnalyzerIndexMapping();
 		/**
 		 * 可自主选择单个插入还是批量插入
 		 */
-//		recipesService.insert();
 		recipesService.bulkInsert();
 	}
 }

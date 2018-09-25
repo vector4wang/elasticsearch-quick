@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.quick.es.mapper.BossJdInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.quick.es.entity.BossJdInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="company_url" property="companyUrl" jdbcType="VARCHAR" />
+    <result column="degree" property="degree" jdbcType="VARCHAR" />
+    <result column="detail_address" property="detailAddress" jdbcType="VARCHAR" />
+    <result column="financing" property="financing" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="job_head" property="jobHead" jdbcType="VARCHAR" />
+    <result column="job_head_position" property="jobHeadPosition" jdbcType="VARCHAR" />
+    <result column="job_name" property="jobName" jdbcType="VARCHAR" />
+    <result column="job_tags" property="jobTags" jdbcType="VARCHAR" />
+    <result column="publish_date" property="publishDate" jdbcType="TIMESTAMP" />
+    <result column="salary" property="salary" jdbcType="VARCHAR" />
+    <result column="scale" property="scale" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="year_of_expe" property="yearOfExpe" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.quick.es.entity.BossJdInfo" extends="BaseResultMap" >
+    <result column="job_desc" property="jobDesc" jdbcType="LONGVARCHAR" />
+    <result column="team_desc" property="teamDesc" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, address, company_name, company_url, degree, detail_address, financing, industry, 
+    job_head, job_head_position, job_name, job_tags, publish_date, salary, scale, url, 
+    year_of_expe, insert_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    job_desc, team_desc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from boss_jd_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+      select
+      <include refid="Base_Column_List" />
+      ,
+      <include refid="Blob_Column_List" />
+      from boss_jd_info
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from boss_jd_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.quick.es.entity.BossJdInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into boss_jd_info (address, company_name, company_url, 
+      degree, detail_address, financing, 
+      industry, job_head, job_head_position, 
+      job_name, job_tags, publish_date, 
+      salary, scale, url, 
+      year_of_expe, insert_time, job_desc, 
+      team_desc)
+    values (#{address,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{companyUrl,jdbcType=VARCHAR}, 
+      #{degree,jdbcType=VARCHAR}, #{detailAddress,jdbcType=VARCHAR}, #{financing,jdbcType=VARCHAR}, 
+      #{industry,jdbcType=VARCHAR}, #{jobHead,jdbcType=VARCHAR}, #{jobHeadPosition,jdbcType=VARCHAR}, 
+      #{jobName,jdbcType=VARCHAR}, #{jobTags,jdbcType=VARCHAR}, #{publishDate,jdbcType=TIMESTAMP}, 
+      #{salary,jdbcType=VARCHAR}, #{scale,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{yearOfExpe,jdbcType=VARCHAR}, #{insertTime,jdbcType=TIMESTAMP}, #{jobDesc,jdbcType=LONGVARCHAR}, 
+      #{teamDesc,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.quick.es.entity.BossJdInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into boss_jd_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="companyUrl != null" >
+        company_url,
+      </if>
+      <if test="degree != null" >
+        degree,
+      </if>
+      <if test="detailAddress != null" >
+        detail_address,
+      </if>
+      <if test="financing != null" >
+        financing,
+      </if>
+      <if test="industry != null" >
+        industry,
+      </if>
+      <if test="jobHead != null" >
+        job_head,
+      </if>
+      <if test="jobHeadPosition != null" >
+        job_head_position,
+      </if>
+      <if test="jobName != null" >
+        job_name,
+      </if>
+      <if test="jobTags != null" >
+        job_tags,
+      </if>
+      <if test="publishDate != null" >
+        publish_date,
+      </if>
+      <if test="salary != null" >
+        salary,
+      </if>
+      <if test="scale != null" >
+        scale,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="yearOfExpe != null" >
+        year_of_expe,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="jobDesc != null" >
+        job_desc,
+      </if>
+      <if test="teamDesc != null" >
+        team_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyUrl != null" >
+        #{companyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        #{degree,jdbcType=VARCHAR},
+      </if>
+      <if test="detailAddress != null" >
+        #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="financing != null" >
+        #{financing,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="jobHead != null" >
+        #{jobHead,jdbcType=VARCHAR},
+      </if>
+      <if test="jobHeadPosition != null" >
+        #{jobHeadPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="jobName != null" >
+        #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTags != null" >
+        #{jobTags,jdbcType=VARCHAR},
+      </if>
+      <if test="publishDate != null" >
+        #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="salary != null" >
+        #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="scale != null" >
+        #{scale,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="yearOfExpe != null" >
+        #{yearOfExpe,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobDesc != null" >
+        #{jobDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="teamDesc != null" >
+        #{teamDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.quick.es.entity.BossJdInfo" >
+    update boss_jd_info
+    <set >
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyUrl != null" >
+        company_url = #{companyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        degree = #{degree,jdbcType=VARCHAR},
+      </if>
+      <if test="detailAddress != null" >
+        detail_address = #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="financing != null" >
+        financing = #{financing,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="jobHead != null" >
+        job_head = #{jobHead,jdbcType=VARCHAR},
+      </if>
+      <if test="jobHeadPosition != null" >
+        job_head_position = #{jobHeadPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="jobName != null" >
+        job_name = #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTags != null" >
+        job_tags = #{jobTags,jdbcType=VARCHAR},
+      </if>
+      <if test="publishDate != null" >
+        publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="salary != null" >
+        salary = #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="scale != null" >
+        scale = #{scale,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="yearOfExpe != null" >
+        year_of_expe = #{yearOfExpe,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobDesc != null" >
+        job_desc = #{jobDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="teamDesc != null" >
+        team_desc = #{teamDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.quick.es.entity.BossJdInfo" >
+    update boss_jd_info
+    set address = #{address,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_url = #{companyUrl,jdbcType=VARCHAR},
+      degree = #{degree,jdbcType=VARCHAR},
+      detail_address = #{detailAddress,jdbcType=VARCHAR},
+      financing = #{financing,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
+      job_head = #{jobHead,jdbcType=VARCHAR},
+      job_head_position = #{jobHeadPosition,jdbcType=VARCHAR},
+      job_name = #{jobName,jdbcType=VARCHAR},
+      job_tags = #{jobTags,jdbcType=VARCHAR},
+      publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      salary = #{salary,jdbcType=VARCHAR},
+      scale = #{scale,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      year_of_expe = #{yearOfExpe,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      job_desc = #{jobDesc,jdbcType=LONGVARCHAR},
+      team_desc = #{teamDesc,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quick.es.entity.BossJdInfo" >
+    update boss_jd_info
+    set address = #{address,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_url = #{companyUrl,jdbcType=VARCHAR},
+      degree = #{degree,jdbcType=VARCHAR},
+      detail_address = #{detailAddress,jdbcType=VARCHAR},
+      financing = #{financing,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
+      job_head = #{jobHead,jdbcType=VARCHAR},
+      job_head_position = #{jobHeadPosition,jdbcType=VARCHAR},
+      job_name = #{jobName,jdbcType=VARCHAR},
+      job_tags = #{jobTags,jdbcType=VARCHAR},
+      publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      salary = #{salary,jdbcType=VARCHAR},
+      scale = #{scale,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      year_of_expe = #{yearOfExpe,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
