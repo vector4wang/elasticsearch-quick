@@ -13,6 +13,39 @@ public class JobDetail extends BossJdInfo {
 
 	private String salary4Kibana;
 
+	public JobDetail() {
+	}
+
+	public JobDetail(BossJdInfo bossJdInfo) {
+		this.setId(bossJdInfo.getId());
+		this.setAddress(bossJdInfo.getAddress());
+		this.setCompanyName(bossJdInfo.getCompanyName());
+		this.setCompanyUrl(bossJdInfo.getCompanyUrl());
+		this.setDegree(bossJdInfo.getDegree());
+		this.setDetailAddress(bossJdInfo.getDetailAddress());
+		this.setFinancing(bossJdInfo.getFinancing());
+		this.setIndustry(bossJdInfo.getIndustry());
+		this.setJobHead(bossJdInfo.getJobHead());
+		this.setJobHeadPosition(bossJdInfo.getJobHeadPosition());
+		this.setJobName(bossJdInfo.getJobName());
+		this.setJobTags(bossJdInfo.getJobTags());
+		this.setPublishDate(bossJdInfo.getPublishDate());
+		this.setSalary(bossJdInfo.getSalary());
+		this.setScale(bossJdInfo.getScale());
+		this.setUrl(bossJdInfo.getUrl());
+		this.setYearOfExpe(bossJdInfo.getYearOfExpe());
+		this.setInsertTime(bossJdInfo.getInsertTime());
+		this.setJobDesc(bossJdInfo.getJobDesc());
+		this.setTeamDesc(bossJdInfo.getTeamDesc());
+
+		this.setJobName4Kibana(bossJdInfo.getJobName());
+		this.setCompany4Kibana(bossJdInfo.getCompanyName());
+		this.setDegree4Kibana(bossJdInfo.getDegree());
+		this.setCompanyFinancing4Kibana(bossJdInfo.getFinancing());
+		this.setCompanyScale4Kibana(bossJdInfo.getScale());
+		this.setSalary4Kibana(bossJdInfo.getSalary());
+	}
+
 	public String getJobName4Kibana() {
 		return jobName4Kibana;
 	}

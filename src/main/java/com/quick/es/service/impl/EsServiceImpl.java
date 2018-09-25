@@ -2,8 +2,8 @@ package com.quick.es.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.quick.es.entity.BossJdInfo;
+import com.quick.es.entity.JobDetail;
 import com.quick.es.mapper.BossJdInfoMapper;
-import com.quick.es.service.BossJdInfoService;
 import com.quick.es.service.EsService;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,21 +74,16 @@ public class EsServiceImpl implements EsService {
 	@Override
 	public void bulkInsert() {
 		List<BossJdInfo> bossJdInfoList = bossJdInfoMapper.selectAll();
+		List<Index> indices = new ArrayList<>();
+		/**
+		 * 注意：测试数据就1w条，所以一次性同步了，如果量很大，可以考虑分组多线程同步
+		 */
 		for (BossJdInfo bossJdInfo : bossJdInfoList) {
-			new
+			JobDetail jobDetail = new JobDetail(bossJdInfo);
+			indices.add(new Index.Builder(jobDetail).id(jobDetail.getId() + "").build());
 		}
-
-		Bulk bulk = new Bulk.Builder().defaultIndex(Recipes.INDEX_NAME).defaultType(Recipes.TYPE).addAction(
-				Arrays.asList(new Index.Builder(recipes0).id(recipes0.getId() + "").build(),
-						new Index.Builder(recipes1).id(recipes1.getId() + "").build(),
-						new Index.Builder(recipes2).id(recipes2.getId() + "").build(),
-						new Index.Builder(recipes3).id(recipes3.getId() + "").build(),
-						new Index.Builder(recipes4).id(recipes4.getId() + "").build(),
-						new Index.Builder(recipes5).id(recipes5.getId() + "").build(),
-						new Index.Builder(recipes6).id(recipes6.getId() + "").build(),
-						new Index.Builder(recipes7).id(recipes7.getId() + "").build(),
-						new Index.Builder(recipes8).id(recipes8.getId() + "").build(),
-						new Index.Builder(recipes9).id(recipes9.getId() + "").build())).build();
+		Bulk bulk = new Bulk.Builder().defaultIndex(BossJdInfo.INDEX_NAME).defaultType(BossJdInfo.TYPE)
+				.addAction(indices).build();
 
 		try {
 			BulkResult bulkResult = jestClient.execute(bulk);

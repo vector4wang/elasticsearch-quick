@@ -1,27 +1,27 @@
 #!/bin/bash 
 set -e 
-# æŸ¥çœ‹mysqlæœåŠ¡çš„çŠ¶æ€ï¼Œæ–¹ä¾¿è°ƒè¯•
+# ²é¿´mysql·şÎñµÄ×´Ì¬£¬·½±ãµ÷ÊÔ
 echo `service mysql status` 
-echo '1.å¯åŠ¨mysql' 
-# å¯åŠ¨mysql 
+echo '1.Æô¶¯mysql' 
+# Æô¶¯mysql 
 service mysql start 
-# ä½¿è¿›ç¨‹ä¼‘çœ 
+# Ê¹½ø³ÌĞİÃß
 sleep 3 
 echo `service mysql status` 
-echo '2.å¼€å§‹å¯¼å…¥æ•°æ®' 
-#å¯¼å…¥sqlæ–‡ä»¶
+echo '2.¿ªÊ¼µ¼ÈëÊı¾İ' 
+#µ¼ÈësqlÎÄ¼ş
 mysql < /mysql/data.sql 
-echo '3.å¯¼å…¥æ•°æ®å®Œæ¯•....' 
+echo '3.µ¼ÈëÊı¾İÍê±Ï....' 
 sleep 3 
 echo `service mysql status` 
-# ç”±äºæœ€å¼€å§‹è®¾ç½®mysqlmysqlä¸ºå…å¯†ç™»é™†ï¼Œä¸ºäº†å®‰å…¨ï¼Œåœ¨æ­¤è®¾ç½®mysqlå¯†ç 
-echo '4.å¼€å§‹ä¿®æ”¹å¯†ç ....' 
-# å¯¼å…¥ä¿®æ”¹mysqlæƒé™è®¾ç½®çš„æ–‡ä»¶
+# ÓÉÓÚ×î¿ªÊ¼ÉèÖÃmysqlmysqlÎªÃâÃÜµÇÂ½£¬ÎªÁË°²È«£¬ÔÚ´ËÉèÖÃmysqlÃÜÂë
+echo '4.¿ªÊ¼ĞŞ¸ÄÃÜÂë....' 
+# µ¼ÈëĞŞ¸ÄmysqlÈ¨ÏŞÉèÖÃµÄÎÄ¼ş
 mysql < /mysql/privileges.sql 
-echo '5.ä¿®æ”¹å¯†ç å®Œæ¯•....' 
+echo '5.ĞŞ¸ÄÃÜÂëÍê±Ï....' 
 #sleep 3 
 echo `service mysql status` 
-echo 'mysqlå®¹å™¨å¯åŠ¨å®Œæ¯•,ä¸”æ•°æ®å¯¼å…¥æˆåŠŸ' 
+echo 'mysqlÈİÆ÷Æô¶¯Íê±Ï,ÇÒÊı¾İµ¼Èë³É¹¦' 
 
-# åœ¨dockerå®¹å™¨ä¸­é˜²æ­¢æ‰§è¡Œå®Œä¹‹åè‡ªè¡Œåœæ­¢ï¼ŒåŠ ä¸Šä¸‹é¢ä¸€å¥å‘½ä»¤è®©å…¶æŒ‚èµ·
+# ÔÚdockerÈİÆ÷ÖĞ·ÀÖ¹Ö´ĞĞÍêÖ®ºó×ÔĞĞÍ£Ö¹£¬¼ÓÉÏÏÂÃæÒ»¾äÃüÁîÈÃÆä¹ÒÆğ
 tail -f /dev/null
