@@ -22,3 +22,9 @@ docker run --ulimit nofile=65536:65536 \
 -e ES_JAVA_OPTS="-Xms512m -Xmx512m"# 不知为何用-v /etc/logstash:/etc/logstash-v /etc/localtime:/etc/localtime
 
 ```
+
+## 发布app
+
+```bash
+mvn package -Pdocker docker:build
+```
