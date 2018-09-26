@@ -48,7 +48,7 @@ public class BossJdInfoServiceImpl implements BossJdInfoService {
 	@Override
 	public List<BossJdInfo> matchQuery(String field, String keyword) {
 		//		searchSourceBuilder.query(QueryBuilders.matchQuery(field, keyword));  // TODO: 2018/8/5 自带的matchquery组装请求参数中带有type，暂不明白
-		String script = "{\"query\":{\"match\":{\"name4Standard\":{\"query\":\"奶油\"}}}}";
+		String script = "{\"query\":{\"match\":{\""+field+"\":{\"query\":\""+keyword+"\"}}}}";
 		Search search = new Search.Builder(script).addIndex(BossJdInfo.INDEX_NAME).addType(BossJdInfo.TYPE).build();
 		return generateResult(search);
 	}
@@ -56,8 +56,7 @@ public class BossJdInfoServiceImpl implements BossJdInfoService {
 	@Override
 	public List<BossJdInfo> booleanQuery(String keyword) {
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("name4Standard", keyword))
-				.must(QueryBuilders.rangeQuery("rating").gte(3.5));
+		QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("jobName", keyword));
 		searchSourceBuilder.query(queryBuilder);
 		System.out.println(searchSourceBuilder.toString());
 		Search build = new Search.Builder(searchSourceBuilder.toString()).addIndex(BossJdInfo.INDEX_NAME)

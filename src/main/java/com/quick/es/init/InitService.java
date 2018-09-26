@@ -16,14 +16,16 @@ import org.springframework.stereotype.Component;
 public class InitService implements CommandLineRunner {
 
 	@Autowired
-	private EsService recipesService;
+	private EsService esService;
 
 	@Override
 	public void run(String... strings) throws Exception {
-		recipesService.createIndex();
+		esService.createIndex();
+		esService.createIndexMapping();
+
 		/**
 		 * 可自主选择单个插入还是批量插入
 		 */
-		recipesService.bulkInsert();
+		esService.bulkInsert();
 	}
 }
