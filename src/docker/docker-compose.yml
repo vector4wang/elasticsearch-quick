@@ -4,16 +4,24 @@ services:
     jd-search-mysql:
         build: mysql/.
         ports:
-            - "3306:3306"
+          - "3306:3306"
 
     jd-search-elk:
         image: sebp/elk
+        depends_on:
+          - jd-search-mysql
         ports:
-            - "5601:5601"
-            - "9200:9200"
-            - "5044:5044"
-            - "5045:5045"
-            - "5046:5046"
+          - "5601:5601"
+          - "9200:9200"
+          - "5044:5044"
+          - "5045:5045"
+          - "5046:5046"
 
     app:
+        image: vector4wang/quick-es
+        depends_on:
+          - jd-search-mysql
+          - jd-search-elk
+        ports:
+          - "6325:6325"
 

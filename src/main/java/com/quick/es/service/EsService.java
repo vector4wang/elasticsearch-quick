@@ -49,4 +49,5 @@ public interface EsService {
 	List<BossJdInfo> search(String content);
 
 
+	void deleteIndex();
 }

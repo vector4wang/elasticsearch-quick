@@ -9,9 +9,12 @@ import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.*;
 import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.DeleteIndex;
 import io.searchbox.indices.mapping.PutMapping;
+import org.elasticsearch.common.util.CollectionUtils;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.mockito.internal.util.collections.ListUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,18 @@ public class EsServiceImpl implements EsService {
 
 	@Autowired
 	private JestClient jestClient;
+
+	@Override
+	public void deleteIndex() {
+		DeleteIndex build = new DeleteIndex.Builder(BossJdInfo.INDEX_NAME).build();
+		try {
+			JestResult jestResult = jestClient.execute(build);
+			LOGGER.info("delete index resp: {}", jestResult.getJsonString());
+		} catch (IOException e) {
+			LOGGER.error("delete index fail. msg:{}", e.getMessage());
+		}
+
+	}
 
 	@Override
 	public void createIndex() {
@@ -82,15 +97,19 @@ public class EsServiceImpl implements EsService {
 			JobDetail jobDetail = new JobDetail(bossJdInfo);
 			indices.add(new Index.Builder(jobDetail).id(jobDetail.getId() + "").build());
 		}
-		Bulk bulk = new Bulk.Builder().defaultIndex(BossJdInfo.INDEX_NAME).defaultType(BossJdInfo.TYPE)
-				.addAction(indices).build();
+		List<List<Index>> lists = CollectionUtils.eagerPartition(indices, 1000);
+		for (List<Index> list : lists) {
+			Bulk bulk = new Bulk.Builder().defaultIndex(BossJdInfo.INDEX_NAME).defaultType(BossJdInfo.TYPE)
+					.addAction(list).build();
 
-		try {
-			BulkResult bulkResult = jestClient.execute(bulk);
-			LOGGER.info("bulkInsert resp: {}", bulkResult.getJsonString());
-		} catch (IOException e) {
-			LOGGER.error("bulkInsert fail. msg:{}", e.getMessage());
+			try {
+				BulkResult bulkResult = jestClient.execute(bulk);
+				LOGGER.info("bulkInsert resp: {}", bulkResult.getJsonString());
+			} catch (IOException e) {
+				LOGGER.error("bulkInsert fail. msg:{}", e.getMessage());
+			}
 		}
+
 	}
 
 	@Override
@@ -155,5 +174,7 @@ public class EsServiceImpl implements EsService {
 		}
 		return null;
 	}
+
+
 
 }

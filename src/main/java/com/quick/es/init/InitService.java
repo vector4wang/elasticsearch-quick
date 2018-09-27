@@ -20,6 +20,7 @@ public class InitService implements CommandLineRunner {
 
 	@Override
 	public void run(String... strings) throws Exception {
+		esService.deleteIndex();
 		esService.createIndex();
 		esService.createIndexMapping();
 
