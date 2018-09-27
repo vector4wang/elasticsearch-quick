@@ -1,6 +1,13 @@
 package com.quick.es.entity;
 
+import org.apache.commons.lang.time.DateUtils;
+
 public class JobDetail extends BossJdInfo {
+
+	private long publishDate4es;
+
+	private long insertTime4es;
+
 	private String jobName4Kibana;
 
 	private String company4Kibana;
@@ -29,21 +36,36 @@ public class JobDetail extends BossJdInfo {
 		this.setJobHeadPosition(bossJdInfo.getJobHeadPosition());
 		this.setJobName(bossJdInfo.getJobName());
 		this.setJobTags(bossJdInfo.getJobTags());
-		this.setPublishDate(bossJdInfo.getPublishDate());
 		this.setSalary(bossJdInfo.getSalary());
 		this.setScale(bossJdInfo.getScale());
 		this.setUrl(bossJdInfo.getUrl());
 		this.setYearOfExpe(bossJdInfo.getYearOfExpe());
-		this.setInsertTime(bossJdInfo.getInsertTime());
+		this.setPublishDate4es(bossJdInfo.getPublishDate().getTime());
+		this.setPublishDate4es(bossJdInfo.getInsertTime().getTime());
 		this.setJobDesc(bossJdInfo.getJobDesc());
 		this.setTeamDesc(bossJdInfo.getTeamDesc());
-
 		this.setJobName4Kibana(bossJdInfo.getJobName());
 		this.setCompany4Kibana(bossJdInfo.getCompanyName());
 		this.setDegree4Kibana(bossJdInfo.getDegree());
 		this.setCompanyFinancing4Kibana(bossJdInfo.getFinancing());
 		this.setCompanyScale4Kibana(bossJdInfo.getScale());
 		this.setSalary4Kibana(bossJdInfo.getSalary());
+	}
+
+	public long getPublishDate4es() {
+		return publishDate4es;
+	}
+
+	public void setPublishDate4es(long publishDate4es) {
+		this.publishDate4es = publishDate4es;
+	}
+
+	public long getInsertTime4es() {
+		return insertTime4es;
+	}
+
+	public void setInsertTime4es(long insertTime4es) {
+		this.insertTime4es = insertTime4es;
 	}
 
 	public String getJobName4Kibana() {

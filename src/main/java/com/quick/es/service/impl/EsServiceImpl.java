@@ -68,7 +68,7 @@ public class EsServiceImpl implements EsService {
 		/**
 		 * 这里可以自己写个json处理
 		 */
-		String source = "{\""+BossJdInfo.TYPE+"\":{\"properties\":{\"id\":{\"type\":\"keyword\"},\"jobName\":{\"type\":\"text\"},\"address\":{\"type\":\"text\"},\"detailAddress\":{\"type\":\"text\"},\"salary\":{\"type\":\"text\"},\"degree\":{\"type\":\"text\"},\"jobDesc\":{\"type\":\"text\"},\"jobHead\":{\"type\":\"text\"},\"hireHead\":{\"type\":\"text\"},\"hireHeadPosition\":{\"type\":\"text\"},\"jobHeadPosition\":{\"type\":\"text\"},\"jobTags\":{\"type\":\"text\"},\"yearOfExpe\":{\"type\":\"text\"},\"teamDesc\":{\"type\":\"text\"},\"teamTags\":{\"type\":\"text\"},\"companyName\":{\"type\":\"text\"},\"companyUrl\":{\"type\":\"text\"},\"financing\":{\"type\":\"text\"},\"industry\":{\"type\":\"text\"},\"scale\":{\"type\":\"text\"},\"companyNature\":{\"type\":\"text\"},\"url\":{\"type\":\"text\"},\"insertTime\":{\"type\":\"date\"},\"publishDate\":{\"type\":\"date\"},\"title4Kibana\":{\"type\":\"keyword\"},\"company4Kibana\":{\"type\":\"keyword\"},\"degree4Kibana\":{\"type\":\"keyword\"},\"companyFinancing4Kibana\":{\"type\":\"keyword\"},\"companyScale4Kibana\":{\"type\":\"keyword\"},\"salary4Kibana\":{\"type\":\"keyword\"}}}}\n";
+		String source = "{\"job_detail\":{\"properties\":{\"id\":{\"type\":\"keyword\"},\"jobName\":{\"type\":\"text\"},\"address\":{\"type\":\"text\"},\"detailAddress\":{\"type\":\"text\"},\"salary\":{\"type\":\"text\"},\"degree\":{\"type\":\"text\"},\"jobDesc\":{\"type\":\"text\"},\"jobHead\":{\"type\":\"text\"},\"hireHead\":{\"type\":\"text\"},\"hireHeadPosition\":{\"type\":\"text\"},\"jobHeadPosition\":{\"type\":\"text\"},\"jobTags\":{\"type\":\"text\"},\"yearOfExpe\":{\"type\":\"text\"},\"teamDesc\":{\"type\":\"text\"},\"teamTags\":{\"type\":\"text\"},\"companyName\":{\"type\":\"text\"},\"companyUrl\":{\"type\":\"keyword\"},\"financing\":{\"type\":\"text\"},\"industry\":{\"type\":\"text\"},\"scale\":{\"type\":\"text\"},\"companyNature\":{\"type\":\"text\"},\"url\":{\"type\":\"text\"},\"insertTime4es\":{\"type\":\"date\",\"format\":\"yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"},\"publishDate4es\":{\"type\":\"date\",\"format\":\"yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"},\"jobName4Kibana\":{\"type\":\"keyword\"},\"company4Kibana\":{\"type\":\"keyword\"},\"degree4Kibana\":{\"type\":\"keyword\"},\"companyFinancing4Kibana\":{\"type\":\"keyword\"},\"companyScale4Kibana\":{\"type\":\"keyword\"},\"salary4Kibana\":{\"type\":\"keyword\"}}}}\n";
 		LOGGER.info("source:{}", source);
 		PutMapping putMapping = new PutMapping.Builder(BossJdInfo.INDEX_NAME, BossJdInfo.TYPE, source).build();
 		try {
@@ -83,6 +83,18 @@ public class EsServiceImpl implements EsService {
 
 	@Override
 	public void insert() {
+		BossJdInfo bossJdInfo = bossJdInfoMapper.selectByPrimaryKey(1345L);
+		JobDetail jobDetail = new JobDetail(bossJdInfo);
+		Index index = new Index.Builder(jobDetail).index(BossJdInfo.INDEX_NAME).type(BossJdInfo.TYPE)
+				.id(jobDetail.getId() + "").build();
+		JestResult jestResult0 = null;
+//		System.out.println(index.);
+		try {
+			jestResult0 = jestClient.execute(index);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		LOGGER.info("insert:{}", jestResult0.getJsonString());
 
 	}
 
