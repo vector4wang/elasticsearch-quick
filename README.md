@@ -73,4 +73,6 @@ docker run --ulimit nofile=65536:65536 \
 ## 玩耍
 
 搜索服务只简单的提供了三个接口，自己可以接着开发
+使用kibana可以做些统计，如图
+[![dashboard.png](https://i.loli.net/2018/09/27/5bace96366f3c.png)](https://i.loli.net/2018/09/27/5bace96366f3c.png)
 
