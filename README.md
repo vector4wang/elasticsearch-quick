@@ -1,6 +1,9 @@
 # quick-elasticsearch
 ElasticSearch的使用笔记
 
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+
+
 这里除了会记录一些ES的使用代码和一些功能实现，也会有ELK的相关使用方法，如下图，比较简单的一个统计
 
  
