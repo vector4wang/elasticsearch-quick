@@ -22,7 +22,7 @@ public class RecipesController {
 	@Resource
 	private RecipesService recipesService;
 
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String add(@RequestBody Recipes recipes) {
 		return recipesService.save(recipes) ? "插入成功!" : "插入失败";
 	}
