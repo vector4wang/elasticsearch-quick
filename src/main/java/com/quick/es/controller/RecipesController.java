@@ -1,7 +1,7 @@
 package com.quick.es.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.quick.es.entity.Recipes;
+import com.quick.es.entity.ResumeFeatureSimHashIndexModel;
 import com.quick.es.service.RecipesService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +23,13 @@ public class RecipesController {
 	private RecipesService recipesService;
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(@RequestBody Recipes recipes) {
+	public String add(@RequestBody ResumeFeatureSimHashIndexModel recipes) {
 		return recipesService.save(recipes) ? "插入成功!" : "插入失败";
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String search(@RequestParam("keyword") String keyword) {
-		List<Recipes> search = recipesService.search(keyword);
+		List<ResumeFeatureSimHashIndexModel> search = recipesService.search(keyword);
 		return JSON.toJSONString(search);
 	}
 
@@ -40,7 +40,7 @@ public class RecipesController {
 	}
 
 	@RequestMapping(value = "/updateByDocId", method = RequestMethod.POST)
-	public String updateByDocId(@RequestBody Recipes recipes) {
+	public String updateByDocId(@RequestBody ResumeFeatureSimHashIndexModel recipes) {
 
 		return recipesService.updateByDocId(recipes) ? "更新成功！" : "更新失败";
 	}

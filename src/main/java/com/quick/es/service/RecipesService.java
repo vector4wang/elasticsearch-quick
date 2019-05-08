@@ -1,6 +1,6 @@
 package com.quick.es.service;
 
-import com.quick.es.entity.Recipes;
+import com.quick.es.entity.ResumeFeatureSimHashIndexModel;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public interface RecipesService {
 
 
 
-	boolean save(Recipes recipes);
+	boolean save(ResumeFeatureSimHashIndexModel recipes);
 
 	/**
 	 * 根据文档ID删除文档
@@ -44,8 +44,9 @@ public interface RecipesService {
 	 */
 	boolean deleteByDocId(String id);
 
-	boolean updateByDocId(Recipes recipes);
+	boolean updateByDocId(ResumeFeatureSimHashIndexModel recipes);
 
-	List<Recipes> search(String content);
+	List<ResumeFeatureSimHashIndexModel> search(String content);
 
+    void getBigData();
 }

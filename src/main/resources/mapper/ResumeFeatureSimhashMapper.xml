@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.es.mapper.ResumeFeatureSimhashMapper">
+
+    <select id="selectIndexModelById" resultType="com.quick.es.entity.ResumeFeatureSimHashIndexModel">
+        SELECT
+            rfs.resume_id as resumeId,
+            rfs.pinyin_name as pinyinName,
+            rfs.real_name as realName,
+            rfs.last_name as lastName,
+            rs.gender,
+            YEAR (now()) - YEAR (rs.birthday) AS age,
+            rs.degree,
+            rs.school,
+            rs.major,
+            rs.company,
+            rs.title,
+            rfs.real_name_sim as realNameSim,
+            rfs.pinyin_name_sim as pinyinNameSim,
+            rfs.company_sim as companySim,
+            rfs.major_sim as majorSim,
+            rfs.school_sim as schoolSim,
+            rfs.title_sim as titleSim,
+            DATE_FORMAT(rfs.work_start_date,'%Y-%m-%d') as workStartDate,
+            DATE_FORMAT(rfs.edu_start_date,'%Y-%m-%d') as eduStartDate,
+            DATE_FORMAT(rfs.edu_end_date,'%Y-%m-%d') as eduEndDate,
+            rfs.company_list_sim as companyListSim,
+            rfs.union_id as unionId,
+            CASE
+        WHEN union_id IN (
+            'a9a403ab-75af-4711-8a13-31017c5e7c5e',
+            'a7e40258-8591-4a4d-87a8-f307266cd163',
+            'a7eb0277-5e6b-4cc7-8b14-601e91e67f8b',
+            'a7eb037d-b491-401a-9ecc-b1bc060679e2',
+            'a7f5042f-88e1-47b3-9308-2818b0743049',
+            'b6462e7b-8962-11e7-b8af-70106fb01274',
+            'b6464f70-8962-11e7-b8af-70106fb01274',
+            'b6479575-8962-11e7-b8af-70106fb01274',
+            'b647a889-8962-11e7-b8af-70106fb01274',
+            'b64f5539-8962-11e7-b8af-70106fb01274',
+            'b66494ae-8962-11e7-b8af-70106fb01274',
+            'b66a3ded-8962-11e7-b8af-70106fb01274',
+            'b66ac9da-8962-11e7-b8af-70106fb01274',
+            'b66bfcb0-8962-11e7-b8af-70106fb01274',
+            'a8ef02fd-c432-4a6e-9526-c5e2606d5ae2'
+        ) THEN
+            1
+        ELSE
+            0
+        END AS isOperations,
+         rfs.firm_id as firmId,
+         rfs.created,
+         rfs.updated
+        FROM
+            resume_feature_simhash rfs
+        INNER JOIN resume_standard rs ON rs.resume_id = rfs.resume_id
+        WHERE
+            rs.resume_id = #{resumeId}
+    </select>
+    <select id="selectIdByPage" resultType="java.lang.String">
+        SELECT resume_id FROM resume_feature_simhash limit #{start},#{offset}
+    </select>
+
+</mapper>

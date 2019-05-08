@@ -1,9 +1,36 @@
 server:
   port: 6325
 
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+
 spring:
   elasticsearch:
     jest:
       uris:
-        - http://localhost:9200
+        - http://es-cn-v0h12aoxg0003hnp1.public.elasticsearch.aliyuncs.com:9200
       read-timeout: 5000
+      username: elastic
+      password: 8O1GaM7lNqIaQIJbzGLV
+
+  datasource:
+    url: jdbc:mysql://192.168.1.162:3306/bzwdev?characterEncoding=UTF-8&allowMultiQueries=true
+    username: bzwdev
+    password: bzwdev2016
+
+#    url: jdbc:mysql://120.55.168.18:8818/tbd?characterEncoding=UTF-8
+#    username: tbd_ro
+#    password: 4XET0kOYcrvA3TNhIEQ6
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    validationQuery: SELECT 1
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat
+    driver-class-name: com.mysql.jdbc.Driver
