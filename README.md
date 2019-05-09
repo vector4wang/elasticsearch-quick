@@ -20,7 +20,7 @@ ElasticSearch的使用笔记
 
 # ssb-jest-base
 
-[branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-base)
+[Branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-base)
 
 SpringBoot使用jest替代官方sdk的使用方法
 
@@ -35,7 +35,7 @@ SpringBoot使用jest替代官方sdk的使用方法
 
 # ssb-jest
 
-[branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-analysis)
+[Branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-analysis)
 
 此分支主要是处理分词和搜索相关问题
 使用IK分词 github地址：https://github.com/medcl/elasticsearch-analysis-ik
@@ -171,6 +171,8 @@ ik分词有两种模式
 
 
 # ES 7.x 下的Jest测试
+
+[Branch](https://github.com/vector4wang/elasticsearch-quick)
 
 注意： *取消了type*
 
