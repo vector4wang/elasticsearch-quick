@@ -169,3 +169,28 @@ ik分词有两种模式
 
 [点我](http://www.cnblogs.com/yjf512/p/4897294.html)看term和match的区别
 
+
+# ES 7.x 下的Jest测试
+
+注意： *取消了type*
+
+目前jest对es的版本支持对应关系如下
+
+Jest Version | Elasticsearch Version
+--- | ---
+\>= 6.0.0 | 6
+\>= 5.0.0 | 5
+\>= 2.0.0 | 2
+0.1.0 - 1.0.0 | 1
+<= 0.0.6 | < 1
+
+所以目前还没有针对es 7.x的版本，但是jest聪明的是，它的请求与返回都是可以拼接的，我们可以把请求参数中的type置空，然后在响应体中，可以直接过去jsonstring
+当然了es7.0 改版的只是一小部分接口，大多数的都不需要怎么改变，但是一定要测试过了才能切换~
+
+个人使用和测试api的方式，分别打开如下两个链接
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html
+
+https://github.com/searchbox-io/Jest/blob/master/jest/src/test/java/io/searchbox/indices/GetMappingIntegrationTest.java
+
+一个是ES的官方文档，一个是jest的IntegrationTest，两者结合，效率杠杠的~~~~
