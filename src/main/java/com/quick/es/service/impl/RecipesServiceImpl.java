@@ -2,13 +2,21 @@ package com.quick.es.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.quick.es.entity.Recipes;
 import com.quick.es.service.RecipesService;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.*;
 import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.IndicesExists;
+import io.searchbox.indices.mapping.GetMapping;
 import io.searchbox.indices.mapping.PutMapping;
+import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.core.util.JsonUtils;
+import org.elasticsearch.action.admin.indices.get.GetIndexAction;
+import org.elasticsearch.http.HttpStats;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.highlight.HighlightBuilder;
@@ -37,8 +45,14 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public void createIndex() {
-		CreateIndex createIndex = new CreateIndex.Builder(Recipes.INDEX_NAME).build();
 		try {
+            IndicesExists indicesExists = new IndicesExists.Builder(Recipes.INDEX_NAME).build();
+            JestResult existResp = jestClient.execute(indicesExists);
+            if (existResp.getResponseCode() == HttpStatus.SC_OK) {
+                LOGGER.warn("{} 已存在!",Recipes.INDEX_NAME);
+                return;
+            }
+            CreateIndex createIndex = new CreateIndex.Builder(Recipes.INDEX_NAME).build();
 			JestResult jestResult = jestClient.execute(createIndex);
 			LOGGER.info("create index resp: {}", jestResult.getJsonString());
 		} catch (IOException e) {
@@ -48,14 +62,24 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public void createIndexMapping() {
-		/**
-		 * 这里可以自己写个json处理
-		 */
-		String source = "{\"" + Recipes.TYPE
-				+ "\": {\"properties\": {\"name\": {\"type\": \"text\"}, \"rating\": {\"type\": \"float\"}, \"type\": {\"type\": \"keyword\"} } } }";
-		LOGGER.info("source:{}", source);
-		PutMapping putMapping = new PutMapping.Builder(Recipes.INDEX_NAME, Recipes.TYPE, source).build();
 		try {
+            GetMapping getMapping = new GetMapping.Builder().addIndex(Recipes.INDEX_NAME).build();
+            JestResult getResp
+                    = jestClient.execute(getMapping);
+            JsonObject mappingsObj = getResp.getJsonObject().getAsJsonObject(Recipes.INDEX_NAME).getAsJsonObject("mappings");
+
+            if (mappingsObj.size() > 0) {
+                LOGGER.warn("{} 索引已存在mapping,为{}", Recipes.INDEX_NAME, getResp.getJsonString());
+                return;
+            }
+
+            /**
+             * 这里可以自己写个json处理
+             */
+            String source = "{\"properties\":{\"name\":{\"type\":\"text\"},\"rating\":{\"type\":\"float\"},\"type\":{\"type\":\"keyword\"}}}";
+            LOGGER.info("source:{}", source);
+            // todo 此处去掉了type
+            PutMapping putMapping = new PutMapping.Builder(Recipes.INDEX_NAME, "", source).build();
 			JestResult jestResult = jestClient.execute(putMapping);
 			LOGGER.info("createIndexMapping resp: {}", jestResult.getJsonString());
 		} catch (IOException e) {
@@ -137,8 +161,8 @@ public class RecipesServiceImpl implements RecipesService {
 		Recipes recipes7 = new Recipes(7L, "广式鲫鱼汤", 5, "粤菜");
 		Recipes recipes8 = new Recipes(8L, "鲫鱼汤（微辣）", 4, "湘菜");
 		Recipes recipes9 = new Recipes(9L, "京酱肉丝", 5, "北方菜");
-
-		Bulk bulk = new Bulk.Builder().defaultIndex(Recipes.INDEX_NAME).defaultType(Recipes.TYPE).addAction(
+        // 注意，这里去掉了type
+		Bulk bulk = new Bulk.Builder().defaultIndex(Recipes.INDEX_NAME).addAction(
 				Arrays.asList(new Index.Builder(recipes0).id(recipes0.getId() + "").build(),
 						new Index.Builder(recipes1).id(recipes1.getId() + "").build(),
 						new Index.Builder(recipes2).id(recipes2.getId() + "").build(),
@@ -207,10 +231,13 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public List<Recipes> search(String content) {
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(QueryBuilders.termQuery("name", content));
-		Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex(Recipes.INDEX_NAME)
-				.addType(Recipes.TYPE).build();
+
+        String searchScript = "{\"query\":{\"match\":{\"name\":{\"query\":\""+content+"\"}}}}";
+
+		Search search = new Search.Builder(searchScript)
+                .addIndex(Recipes.INDEX_NAME)
+//				.addType(Recipes.TYPE) 注意此处也删掉了type
+                .build();
 		try {
 			JestResult result = jestClient.execute(search);
 			return result.getSourceAsObjectList(Recipes.class);

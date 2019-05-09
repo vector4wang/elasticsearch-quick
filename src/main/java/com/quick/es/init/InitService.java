@@ -25,7 +25,7 @@ public class InitService implements CommandLineRunner {
 		/**
 		 * 可自主选择单个插入还是批量插入
 		 */
-//		recipesService.insert();
+		recipesService.insert();
 		recipesService.bulkInsert();
 	}
 }

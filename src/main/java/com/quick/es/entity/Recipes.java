@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class Recipes implements Serializable {
 
-	public static final String INDEX_NAME = "recipes";
+	public static final String INDEX_NAME = "recipes_2";
 	public static final String TYPE = "item";
 
 	private Long id;
