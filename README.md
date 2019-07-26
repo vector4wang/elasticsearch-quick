@@ -2,7 +2,12 @@
 # quick-elasticsearch
 ElasticSearch的使用笔记
 
+<<<<<<< HEAD
 **如果你没有安装ELK，可以使用Docker安装，详见[Docker快速安装ELK](#Docker快速安装ELK)**
+=======
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+
+>>>>>>> b8f3dd96d221b00e3fadd165a20adf6945d1c68a
 
 这里除了会记录一些ES的使用代码和一些功能实现，也会有ELK的相关使用方法，如下图，比较简单的一个统计
 
@@ -20,7 +25,7 @@ ElasticSearch的使用笔记
 
 # ssb-jest-base
 
-[branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-base)
+[Branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-base)
 
 SpringBoot使用jest替代官方sdk的使用方法
 
@@ -35,7 +40,7 @@ SpringBoot使用jest替代官方sdk的使用方法
 
 # ssb-jest
 
-[branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-analysis)
+[Branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-analysis)
 
 此分支主要是处理分词和搜索相关问题
 使用IK分词 github地址：https://github.com/medcl/elasticsearch-analysis-ik
@@ -169,6 +174,7 @@ ik分词有两种模式
 
 [点我](http://www.cnblogs.com/yjf512/p/4897294.html)看term和match的区别
 
+<<<<<<< HEAD
 ## Docker快速安装ELK
 
 首先在[Dockerhub](https://hub.docker.com/r/sebp/elk)找到对应的版本号(不同版本号的用法有点区别，需要注意！)
@@ -189,3 +195,32 @@ docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk sebp/elk
 ```
 端口关系如下图：
 ![port](http://cdn.wangxc.club/Og5eps4.png)
+=======
+
+# ES 7.x 下的Jest测试
+
+[Branch](https://github.com/vector4wang/elasticsearch-quick)
+
+注意： *取消了type*
+
+目前jest对es的版本支持对应关系如下
+
+Jest Version | Elasticsearch Version
+--- | ---
+\>= 6.0.0 | 6
+\>= 5.0.0 | 5
+\>= 2.0.0 | 2
+0.1.0 - 1.0.0 | 1
+<= 0.0.6 | < 1
+
+所以目前还没有针对es 7.x的版本，但是jest聪明的是，它的请求与返回都是可以拼接的，我们可以把请求参数中的type置空，然后在响应体中，可以直接获取jsonstring
+当然了es7.0 改版的只是一小部分接口，大多数的都不需要怎么改变，但是一定要测试过了才能切换~
+
+个人使用和测试api的方式，分别打开如下两个链接
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html
+
+https://github.com/searchbox-io/Jest/blob/master/jest/src/test/java/io/searchbox/indices/GetMappingIntegrationTest.java
+
+一个是ES的官方文档，一个是jest的IntegrationTest，两者结合，效率杠杠的~~~~
+>>>>>>> b8f3dd96d221b00e3fadd165a20adf6945d1c68a
