@@ -1,5 +1,8 @@
+
 # quick-elasticsearch
 ElasticSearch的使用笔记
+
+**如果你没有安装ELK，可以使用Docker安装，详见[Docker快速安装ELK](#Docker快速安装ELK)**
 
 这里除了会记录一些ES的使用代码和一些功能实现，也会有ELK的相关使用方法，如下图，比较简单的一个统计
 
@@ -166,3 +169,23 @@ ik分词有两种模式
 
 [点我](http://www.cnblogs.com/yjf512/p/4897294.html)看term和match的区别
 
+## Docker快速安装ELK
+
+首先在[Dockerhub](https://hub.docker.com/r/sebp/elk)找到对应的版本号(不同版本号的用法有点区别，需要注意！)
+
+
+```bash
+# 7.0
+docker pull sebp/elk:700
+# 2.3.5
+docker pull sebp/elk:es235_l234_k454
+
+```
+页面上有版本号的对应关系，找准即可
+
+然后进入[帮助页面](https://elk-docker.readthedocs.io/) 因为只需要使用ES的9200端口和Kibana的5601端口，所以这样启动
+```bash
+docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk sebp/elk
+```
+端口关系如下图：
+![port](http://cdn.wangxc.club/Og5eps4.png)
