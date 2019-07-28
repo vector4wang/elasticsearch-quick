@@ -33,7 +33,6 @@ public class RecipesController {
 		return JSON.toJSONString(search);
 	}
 
-
 	@RequestMapping(value = "/deleteByDocId", method = RequestMethod.GET)
 	public String deleteByDocId(@RequestParam("id") String id) {
 		return recipesService.deleteByDocId(id) ? "文档已删除！" : "删除失败";

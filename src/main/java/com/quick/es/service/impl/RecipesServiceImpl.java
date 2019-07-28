@@ -1,8 +1,6 @@
 package com.quick.es.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.quick.es.entity.Recipes;
 import com.quick.es.service.RecipesService;
@@ -14,12 +12,6 @@ import io.searchbox.indices.IndicesExists;
 import io.searchbox.indices.mapping.GetMapping;
 import io.searchbox.indices.mapping.PutMapping;
 import org.apache.http.HttpStatus;
-import org.apache.logging.log4j.core.util.JsonUtils;
-import org.elasticsearch.action.admin.indices.get.GetIndexAction;
-import org.elasticsearch.http.HttpStats;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author vector
@@ -46,13 +37,13 @@ public class RecipesServiceImpl implements RecipesService {
 	@Override
 	public void createIndex() {
 		try {
-            IndicesExists indicesExists = new IndicesExists.Builder(Recipes.INDEX_NAME).build();
-            JestResult existResp = jestClient.execute(indicesExists);
-            if (existResp.getResponseCode() == HttpStatus.SC_OK) {
-                LOGGER.warn("{} 已存在!",Recipes.INDEX_NAME);
-                return;
-            }
-            CreateIndex createIndex = new CreateIndex.Builder(Recipes.INDEX_NAME).build();
+			IndicesExists indicesExists = new IndicesExists.Builder(Recipes.INDEX_NAME).build();
+			JestResult existResp = jestClient.execute(indicesExists);
+			if (existResp.getResponseCode() == HttpStatus.SC_OK) {
+				LOGGER.warn("{} 已存在!", Recipes.INDEX_NAME);
+				return;
+			}
+			CreateIndex createIndex = new CreateIndex.Builder(Recipes.INDEX_NAME).build();
 			JestResult jestResult = jestClient.execute(createIndex);
 			LOGGER.info("create index resp: {}", jestResult.getJsonString());
 		} catch (IOException e) {
@@ -63,23 +54,21 @@ public class RecipesServiceImpl implements RecipesService {
 	@Override
 	public void createIndexMapping() {
 		try {
-            GetMapping getMapping = new GetMapping.Builder().addIndex(Recipes.INDEX_NAME).build();
-            JestResult getResp
-                    = jestClient.execute(getMapping);
-            JsonObject mappingsObj = getResp.getJsonObject().getAsJsonObject(Recipes.INDEX_NAME).getAsJsonObject("mappings");
-
-            if (mappingsObj.size() > 0) {
-                LOGGER.warn("{} 索引已存在mapping,为{}", Recipes.INDEX_NAME, getResp.getJsonString());
-                return;
-            }
-
-            /**
-             * 这里可以自己写个json处理
-             */
-            String source = "{\"properties\":{\"name\":{\"type\":\"text\"},\"rating\":{\"type\":\"float\"},\"type\":{\"type\":\"keyword\"}}}";
-            LOGGER.info("source:{}", source);
-            // todo 此处去掉了type
-            PutMapping putMapping = new PutMapping.Builder(Recipes.INDEX_NAME, "", source).build();
+			GetMapping getMapping = new GetMapping.Builder().addIndex(Recipes.INDEX_NAME).build();
+			JestResult getResp = jestClient.execute(getMapping);
+			JsonObject mappingsObj = getResp.getJsonObject().getAsJsonObject(Recipes.INDEX_NAME)
+					.getAsJsonObject("mappings");
+			if (mappingsObj.size() > 0) {
+				LOGGER.warn("{} 索引已存在mapping,为{}", Recipes.INDEX_NAME, getResp.getJsonString());
+				return;
+			}
+			/**
+			 * 这里可以自己写个json处理
+			 */
+			String source = "{\"properties\":{\"name\":{\"type\":\"text\"},\"rating\":{\"type\":\"float\"},\"type\":{\"type\":\"keyword\"}}}";
+			LOGGER.info("source:{}", source);
+			// 注意， 此处去掉了type 后面所有用到type的地方也都一并去除
+			PutMapping putMapping = new PutMapping.Builder(Recipes.INDEX_NAME, "", source).build();
 			JestResult jestResult = jestClient.execute(putMapping);
 			LOGGER.info("createIndexMapping resp: {}", jestResult.getJsonString());
 		} catch (IOException e) {
@@ -99,29 +88,26 @@ public class RecipesServiceImpl implements RecipesService {
 		Recipes recipes7 = new Recipes(7L, "广式鲫鱼汤", 5, "粤菜");
 		Recipes recipes8 = new Recipes(8L, "鲫鱼汤（微辣）", 4, "湘菜");
 		Recipes recipes9 = new Recipes(9L, "京酱肉丝", 5, "北方菜");
-
-		Index index0 = new Index.Builder(recipes0).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index0 = new Index.Builder(recipes0).index(Recipes.INDEX_NAME)
 				.id(recipes0.getId() + "").build();
-		Index index1 = new Index.Builder(recipes1).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index1 = new Index.Builder(recipes1).index(Recipes.INDEX_NAME)
 				.id(recipes1.getId() + "").build();
-		Index index2 = new Index.Builder(recipes2).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index2 = new Index.Builder(recipes2).index(Recipes.INDEX_NAME)
 				.id(recipes2.getId() + "").build();
-		Index index3 = new Index.Builder(recipes3).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index3 = new Index.Builder(recipes3).index(Recipes.INDEX_NAME)
 				.id(recipes3.getId() + "").build();
-		Index index4 = new Index.Builder(recipes4).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index4 = new Index.Builder(recipes4).index(Recipes.INDEX_NAME)
 				.id(recipes4.getId() + "").build();
-		Index index5 = new Index.Builder(recipes5).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index5 = new Index.Builder(recipes5).index(Recipes.INDEX_NAME)
 				.id(recipes5.getId() + "").build();
-		Index index6 = new Index.Builder(recipes6).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index6 = new Index.Builder(recipes6).index(Recipes.INDEX_NAME)
 				.id(recipes6.getId() + "").build();
-		Index index7 = new Index.Builder(recipes7).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index7 = new Index.Builder(recipes7).index(Recipes.INDEX_NAME)
 				.id(recipes7.getId() + "").build();
-		Index index8 = new Index.Builder(recipes8).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index8 = new Index.Builder(recipes8).index(Recipes.INDEX_NAME)
 				.id(recipes8.getId() + "").build();
-		Index index9 = new Index.Builder(recipes9).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Index index9 = new Index.Builder(recipes9).index(Recipes.INDEX_NAME)
 				.id(recipes9.getId() + "").build();
-
-
 		try {
 			JestResult jestResult0 = jestClient.execute(index0);
 			LOGGER.info("insert:{}", jestResult0.getJsonString());
@@ -161,7 +147,7 @@ public class RecipesServiceImpl implements RecipesService {
 		Recipes recipes7 = new Recipes(7L, "广式鲫鱼汤", 5, "粤菜");
 		Recipes recipes8 = new Recipes(8L, "鲫鱼汤（微辣）", 4, "湘菜");
 		Recipes recipes9 = new Recipes(9L, "京酱肉丝", 5, "北方菜");
-        // 注意，这里去掉了type
+		// 注意，这里去掉了type
 		Bulk bulk = new Bulk.Builder().defaultIndex(Recipes.INDEX_NAME).addAction(
 				Arrays.asList(new Index.Builder(recipes0).id(recipes0.getId() + "").build(),
 						new Index.Builder(recipes1).id(recipes1.getId() + "").build(),
@@ -173,7 +159,6 @@ public class RecipesServiceImpl implements RecipesService {
 						new Index.Builder(recipes7).id(recipes7.getId() + "").build(),
 						new Index.Builder(recipes8).id(recipes8.getId() + "").build(),
 						new Index.Builder(recipes9).id(recipes9.getId() + "").build())).build();
-
 		try {
 			BulkResult bulkResult = jestClient.execute(bulk);
 			LOGGER.info("bulkInsert resp: {}", bulkResult.getJsonString());
@@ -184,7 +169,7 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public boolean save(Recipes recipes) {
-		Index index = new Index.Builder(recipes).index(Recipes.INDEX_NAME).type(Recipes.TYPE).build();
+		Index index = new Index.Builder(recipes).index(Recipes.INDEX_NAME).build();
 		try {
 			DocumentResult execute = jestClient.execute(index);
 			LOGGER.info("ES 插入完成");
@@ -198,7 +183,7 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public boolean deleteByDocId(String id) {
-		Delete delete = new Delete.Builder(id).index(Recipes.INDEX_NAME).type(Recipes.TYPE).build();
+		Delete delete = new Delete.Builder(id).index(Recipes.INDEX_NAME).build();
 		DocumentResult dr = null;
 		try {
 			dr = jestClient.execute(delete);
@@ -217,7 +202,7 @@ public class RecipesServiceImpl implements RecipesService {
 	public boolean updateByDocId(Recipes recipes) {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("doc", recipes);
-		Update update = new Update.Builder(jsonObject.toJSONString()).index(Recipes.INDEX_NAME).type(Recipes.TYPE)
+		Update update = new Update.Builder(jsonObject.toJSONString()).index(Recipes.INDEX_NAME)
 				.id(recipes.getId() + "").build();
 		try {
 			JestResult result = jestClient.execute(update);
@@ -231,13 +216,9 @@ public class RecipesServiceImpl implements RecipesService {
 
 	@Override
 	public List<Recipes> search(String content) {
-
-        String searchScript = "{\"query\":{\"match\":{\"name\":{\"query\":\""+content+"\"}}}}";
-
-		Search search = new Search.Builder(searchScript)
-                .addIndex(Recipes.INDEX_NAME)
-//				.addType(Recipes.TYPE) 注意此处也删掉了type
-                .build();
+		String searchScript = "{\"query\":{\"match\":{\"name\":{\"query\":\"" + content + "\"}}}}";
+		Search search = new Search.Builder(searchScript).addIndex(Recipes.INDEX_NAME)
+				.build();
 		try {
 			JestResult result = jestClient.execute(search);
 			return result.getSourceAsObjectList(Recipes.class);
