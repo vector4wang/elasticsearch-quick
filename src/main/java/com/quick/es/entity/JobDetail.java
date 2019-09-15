@@ -1,7 +1,5 @@
 package com.quick.es.entity;
 
-import org.apache.commons.lang.time.DateUtils;
-
 public class JobDetail extends BossJdInfo {
 
 	private long publishDate4es;
