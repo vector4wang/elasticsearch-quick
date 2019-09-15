@@ -1,4 +1,0 @@
-2018-09-24 11:13:13.549 [main] ERROR com.quick.es.service.EsService - create index fail. msg:Could not connect to http://localhost:9200
-2018-09-24 11:13:13.551 [main] ERROR com.quick.es.service.EsService - createIndexMapping fail. msg:Could not connect to http://localhost:9200
-2018-09-24 11:14:26.204 [main] ERROR com.quick.es.service.EsService - create index fail. msg:Could not connect to http://localhost:9200
-2018-09-24 11:14:26.207 [main] ERROR com.quick.es.service.EsService - createIndexMapping fail. msg:Could not connect to http://localhost:9200
