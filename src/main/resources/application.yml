@@ -18,9 +18,6 @@ spring:
     username: bzwdev
     password: bzwdev2016
 
-#    url: jdbc:mysql://120.55.168.18:8818/tbd?characterEncoding=UTF-8
-#    username: tbd_ro
-#    password: 4XET0kOYcrvA3TNhIEQ6
     initialSize: 5
     minIdle: 5
     maxActive: 20
