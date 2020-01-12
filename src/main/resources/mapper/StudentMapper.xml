@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.es.mapper.StudentMapper">
+
+    <resultMap type="com.quick.es.model.EsStudent" id="EsStudentMap">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <collection property="courseScores" ofType="com.quick.es.model.EsCourseScore">
+            <result column="class_name" jdbcType="VARCHAR" property="className"/>
+            <result column="score" jdbcType="VARCHAR" property="score"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectAllStudentScore" resultMap="EsStudentMap">
+        SELECT s.*,cs.class_name,cs.score FROM student s LEFT JOIN course_score cs on s.id = cs.stu_id
+    </select>
+</mapper>

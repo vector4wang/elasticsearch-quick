@@ -1,0 +1,26 @@
+{
+  "student_score": {
+    "properties": {
+      "age": {
+        "type": "short"
+      },
+      "courseScores": {
+        "properties": {
+          "className": {
+            "type": "keyword"
+          },
+          "score": {
+            "type": "double"
+          }
+        },
+        "type": "nested"
+      },
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "keyword"
+      }
+    }
+  }
+}
