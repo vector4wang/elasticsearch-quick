@@ -201,6 +201,11 @@ https://github.com/searchbox-io/Jest/blob/master/jest/src/test/java/io/searchbox
 
 一个是ES的官方文档，一个是jest的IntegrationTest，两者结合，效率杠杠的~~~~
 
+# ES 聚合示例
+
+
+[Branch](https://github.com/vector4wang/elasticsearch-quick/tree/sb-jest-aggregation)
+聚合脚本的示例，包括普通聚合，netsted聚合查询统计等等，后面用到哪些再继续补充
 
 ## Docker快速安装ELK
 
@@ -222,3 +227,4 @@ docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk sebp/elk
 ```
 端口关系如下图：
 ![port](http://cdn.wangxc.club/Og5eps4.png)
+
