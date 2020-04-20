@@ -1,6 +1,6 @@
-package com.test;
+package com.quick.es.entity;
 
-import java.util.Date;
+import lombok.Data;
 
 /**
  *
@@ -8,6 +8,7 @@ import java.util.Date;
  * @date: 2020/3/18 下午8:28
  *
  */
+@Data
 public class Order {
 
 
@@ -19,35 +20,4 @@ public class Order {
 	private String uid;
 	private String nick;
 	private String chatTime;
-
-
-	public Order(String uid, String nick, String chatTime) {
-		this.uid = uid;
-		this.nick = nick;
-		this.chatTime = chatTime;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
-	public String getNick() {
-		return nick;
-	}
-
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
-
-	public String getChatTime() {
-		return chatTime;
-	}
-
-	public void setChatTime(String chatTime) {
-		this.chatTime = chatTime;
-	}
 }

@@ -1,9 +1,3 @@
-server:
-  port: 6325
-
-spring:
-  elasticsearch:
-    jest:
-      uris:
-        - http://localhost:9200
-      read-timeout: 5000
+es:
+  cluster-nodes: localhost:9300
+  cluster-name: elasticsearch

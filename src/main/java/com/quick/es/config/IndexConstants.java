@@ -7,4 +7,5 @@ package com.quick.es.config;
  *
  */
 public class IndexConstants {
+	public static final String ORDER_PREFIX = "order-";
 }
