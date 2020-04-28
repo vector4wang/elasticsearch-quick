@@ -15,7 +15,7 @@ import java.io.IOException;
  * @date: 2020/3/18 下午10:13
  *
  */
-@Component
+//@Component
 @Slf4j
 public class PerpareIndex {
 
