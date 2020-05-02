@@ -2,8 +2,15 @@ package com.quick.es.service;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONUtil;
+import com.quick.es.entity.Address;
 import com.quick.es.entity.Employ;
+import com.quick.es.entity.Student;
+import com.quick.es.entity.Subject;
+import com.quick.es.model.CityGeo;
 import com.quick.es.utils.ChineseName;
 import com.quick.es.utils.NetChinaCi;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +36,9 @@ import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +54,10 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 @Service
 @Slf4j
 public class IndexService {
+
+	private final static String DEFAULT_INDEX = "student";
+
+	private final static String[] DEFAULT_SUBJECTS = {"语文", "数学", "外语", "生物", "物理", "化学"};
 
 	@Autowired
 	private IndexManagerService indexManagerService;
@@ -69,19 +82,43 @@ public class IndexService {
 	}
 
 	public void batchInsertData() {
-		List<Employ> list = new ArrayList<>();
+		String content = FileUtil
+				.readString(new File("/Users/wangxc/Code/Github/elasticsearch-quick/doc/geo/chinaCity.json"),
+						Charset.defaultCharset());
+		List<CityGeo> cityGeos = JSONUtil.toList(JSONUtil.parseArray(content), CityGeo.class);
+		List<Student> list = new ArrayList<>();
 		for (int i = 0; i < 1000; i++) {
-			Employ employ = new Employ();
-			employ.setName(ChineseName.generateName());
-			employ.setAge(RandomUtil.randomInt(100));
-			employ.setBirthday(DateUtil.format(RandomUtil
-							.randomDate(DateUtil.parse("1990-04-21 19:41:17", NORM_DATETIME_PATTERN), DateField.YEAR, 0, 10),
-					NORM_DATETIME_PATTERN));
-			employ.setRemark(NetChinaCi.generateChinaCi());
-			list.add(employ);
-			indexManagerService.bucketInsert("sf-test", list);
-			list.clear();
+			Student student = new Student();
+			student.setUid(UUID.fastUUID().toString());
+			student.setUserName(ChineseName.generateName());
+			student.setAge(RandomUtil.randomInt(15, 25));
+			student.setBirthday(DateUtil.format(RandomUtil
+					.randomDate(DateUtil.parse("1995-01-01 19:41:17", NORM_DATETIME_PATTERN), DateField.MINUTE, 0, 13104000),NORM_DATETIME_PATTERN));
+
+			List<File> files = FileUtil.loopFiles("/Users/wangxc/Code/Github/elasticsearch-quick/doc/cis/");
+			student.setContent(FileUtil.readString(RandomUtil.randomEle(files),Charset.defaultCharset()));
+			Address address = new Address();
+			CityGeo cityGeo = RandomUtil.randomEle(cityGeos);
+			address.setProvince(cityGeo.getName());
+			CityGeo.ChildrenBean childrenBean = RandomUtil.randomEle(cityGeo.getChildren());
+			address.setCity(childrenBean.getName());
+			address.setLocation(new Address.Location(childrenBean.getLat(),childrenBean.getLog()));
+			student.setAddress(address);
+
+			int total = RandomUtil.randomInt(1, DEFAULT_SUBJECTS.length);
+			List<Subject> subjects = new ArrayList<>();
+			for (int j = 0; j < total; j++) {
+				Subject subject = new Subject();
+				subject.setName(RandomUtil.randomEle(DEFAULT_SUBJECTS));
+				subject.setScore(RandomUtil.randomDouble(100));
+				subjects.add(subject);
+			}
+			student.setSubjects(subjects);
+			student.setTotalScore(subjects.stream().mapToDouble(Subject::getScore).sum());
+			list.add(student);
 		}
+		indexManagerService.bucketInsert(DEFAULT_INDEX, list);
+		list.clear();
 	}
 
 
@@ -89,8 +126,7 @@ public class IndexService {
 		String settingStr =
 				"{\n" + "  \"index\": {\n" + "    \"number_of_shards\": 3,\n" + "    \"number_of_replicas\": 1\n"
 						+ "  }\n" + "}";
-		CreateIndexRequestBuilder createIndexRequestBuilder = transportClient.admin()
-				.indices().prepareCreate("student")
+		CreateIndexRequestBuilder createIndexRequestBuilder = transportClient.admin().indices().prepareCreate(DEFAULT_INDEX)
 				.setSettings(settingStr, XContentType.JSON);
 		log.info("create index DSL: \n {}", createIndexRequestBuilder.toString());
 		CreateIndexResponse createIndexResponse = createIndexRequestBuilder.execute().actionGet();
@@ -99,27 +135,36 @@ public class IndexService {
 
 	public void createMapping() {
 		//language=JSON
-		String mappingStr = "{\n" + "  \"properties\": {\n" + "    \"uid\": {\n" + "      \"type\": \"keyword\"\n" + "    },\n"
-				+ "    \"userName\":{\n" + "      \"type\": \"keyword\"\n" + "    },\n" + "    \"age\": {\n" + "      \"type\": \"integer\"\n" + "    },\n"
-				+ "    \"birthday\": {\n" + "      \"type\": \"date\",\n"
-				+ "      \"format\": \"yyyy-MM-dd HH:mm:ss\"\n" + "    },\n" + "    \"content\": {\n"
-				+ "      \"type\": \"text\"\n" + "    },\n" + "    \"address\": {\n" + "      \"properties\": {\n"
-				+ "        \"provice\": {\n" + "          \"type\": \"keyword\"\n" + "        },\n"
-				+ "        \"city\": {\n" + "          \"type\": \"keyword\"\n" + "        },\n"
-				+ "        \"streets\": {\n" + "          \"type\": \"keyword\"\n" + "        },\n"
-				+ "        \"location\": {\n" + "          \"type\": \"geo_point\"\n" + "        }\n" + "      }\n"
-				+ "    },\n" + "    \"subjects\": {\n" + "      \"type\": \"nested\"\n" + "    }\n" + "  }\n" + "}";
+		String mappingStr =
+				"{\n" + "  \"properties\": {\n" + "    \"uid\": {\n" + "      \"type\": \"keyword\"\n" + "    },\n"
+						+ "    \"userName\":{\n" + "      \"type\": \"keyword\"\n" + "    },\n" + "    \"age\": {\n"
+						+ "      \"type\": \"integer\"\n" + "    },\n" + "    \"birthday\": {\n"
+						+ "      \"type\": \"date\",\n" + "      \"format\": \"yyyy-MM-dd HH:mm:ss\"\n" + "    },\n"
+						+ "    \"content\": {\n" + "      \"type\": \"text\"\n" + "    },\n" + "    \"address\": {\n"
+						+ "      \"properties\": {\n" + "        \"provice\": {\n" + "          \"type\": \"keyword\"\n"
+						+ "        },\n" + "        \"city\": {\n" + "          \"type\": \"keyword\"\n"
+						+ "        },\n" + "        \"location\": {\n" + "          \"type\": \"geo_point\"\n"
+						+ "        }\n" + "      }\n" + "    },\n" + "    \"subjects\": {\n"
+						+ "      \"type\": \"nested\"\n" + "    },\n" + "    \"totalScore\": {\n"
+						+ "      \"type\": \"double\"\n" + "    }\n" + "  }\n" + "}";
 		PutMappingRequestBuilder putMappingRequestBuilder = transportClient.admin().indices()
-				.preparePutMapping("student").setType("doc").setSource(mappingStr, XContentType.JSON);
-		log.info("create Mapping DSL \n {}",putMappingRequestBuilder.toString());
+				.preparePutMapping(DEFAULT_INDEX).setType("doc").setSource(mappingStr, XContentType.JSON);
+		log.info("create Mapping DSL \n {}", putMappingRequestBuilder.toString());
 		AcknowledgedResponse response = putMappingRequestBuilder.execute().actionGet();
-		log.info("createMapping resposne : {} ",response.isAcknowledged());
+		log.info("createMapping resposne : {} ", response.isAcknowledged());
 	}
 
 	public void getMapping() {
-		GetMappingsResponse studentMapping = transportClient.admin().indices().prepareGetMappings("student").execute()
+		GetMappingsResponse studentMapping = transportClient.admin().indices().prepareGetMappings(DEFAULT_INDEX).execute()
 				.actionGet();
-		log.info("get Mapping: \n {}",studentMapping.toString());
+		log.info("get Mapping: \n {}", studentMapping.toString());
+
+	}
+
+	public void deleteIndex() {
+		AcknowledgedResponse response = transportClient.admin().indices().prepareDelete(DEFAULT_INDEX).execute()
+				.actionGet();
+		log.info("delete index : {}", response.isAcknowledged());
 
 	}
 }

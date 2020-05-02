@@ -26,4 +26,5 @@ public class Student {
 	private String content;
 	private Address address;
 	private List<Subject> subjects;
+	private Double totalScore;
 }

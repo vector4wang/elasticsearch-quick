@@ -29,6 +29,11 @@ public class IndexServiceTest {
 	}
 
 	@Test
+	public void testDeleteIndex() {
+		indexService.deleteIndex();
+	}
+
+	@Test
 	public void testCreateMapping() {
 		indexService.createMapping();
 	}
@@ -37,6 +42,7 @@ public class IndexServiceTest {
 	public void testGetMapping() {
 		indexService.getMapping();
 	}
+
 
 	@Test
 	public void batchTest() {

@@ -1,6 +1,9 @@
 package com.quick.es.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 /**
  *
@@ -12,7 +15,12 @@ import lombok.Data;
 public class Address {
 	private String province;
 	private String city;
-	private String streets;
-	private String lat;
-	private String lon;
+	private Location location;
+
+	@AllArgsConstructor
+	@Data
+	public static class Location {
+		private String lat;
+		private String lon;
+	}
 }
