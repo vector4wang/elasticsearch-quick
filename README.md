@@ -130,7 +130,7 @@ POST /order-write/_rollover/order-20200323
 
 ### 多索引
 需求如图
-![multi-alias](doc/mult-alias.png)
+![multi-alias](https://github.com/vector4wang/elasticsearch-quick/blob/sb-transport-rollover/doc/multi-alias.png)
 
 
 ```bash
