@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <es.version>5.4.0</es.version>
+        <es.version>6.8.15</es.version>
     </properties>
 
     <parent>
